@@ -3,6 +3,7 @@ import Web1337, {SIGNATURES_TYPES} from '../index.js'
 import crypto from '../crypto_primitives/crypto.js'
 
 import bls from '../crypto_primitives/bls.js'
+import Web3 from 'web3'
 
 
 
@@ -29,7 +30,17 @@ import bls from '../crypto_primitives/bls.js'
 */
 
 
+let toBigIntString = value => BigInt(Math.round(value * 1e18)).toString();
+
+
 export let getTransactionTemplate=(workflowVersion,creator,txType,sigType,nonce,fee,payload)=>{
+
+    fee = toBigIntString(fee);
+
+    if(payload.amount) payload.amount = toBigIntString(payload.amount);
+
+    if(payload?.params?.amount) payload.params.amount = toBigIntString(payload.params.amount);
+
 
     return {
 
