@@ -3,7 +3,6 @@ import Web1337, {SIGNATURES_TYPES} from '../index.js'
 import crypto from '../crypto_primitives/crypto.js'
 
 import bls from '../crypto_primitives/bls.js'
-import Web3 from 'web3'
 
 
 

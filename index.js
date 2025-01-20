@@ -78,6 +78,23 @@ const SIGNATURES_TYPES = {
 }
 
 
+const getCostPerSignatureType = transaction => {
+
+    if(transaction.sigType==='D') return 5000n
+    
+    if(transaction.sigType==='T') return 10000n
+
+    if(transaction.sigType==='P/D') return 15000n
+
+    if(transaction.sigType==='P/B') return 15000n
+
+    if(transaction.sigType==='M') return 7000n + BigInt(transaction.payload.afk.length) * 1000n
+
+    return 0n
+
+}
+
+
 
 
 export {TX_TYPES,SIGNATURES_TYPES}
@@ -279,5 +296,50 @@ export default class {
 
     changeCurrentChain=chainID=>this.currentChain=chainID
 
+    //_________________ Other useful methods ________________
+
+    calculateFeeAndAbstractGas = tx => {
+
+        let requiredFee = getCostPerSignatureType(tx)
+
+        if(tx.type === 'WVM_CONTRACT_DEPLOY'){
+    
+            requiredFee += 2000n * BigInt(tx.payload.bytecode.length / 2) // 0.000002 KLY per byte
+
+            requiredFee += 2_000_000n * BigInt(JSON.stringify(tx.payload.constructorParams.initStorage).length)
+
+        } else if(tx.type === 'WVM_CALL'){
+
+            let totalSize = JSON.stringify(tx.payload).length
+
+            requiredFee += 2_000_000n * BigInt(totalSize)
+
+            requiredFee += BigInt(tx.payload.gasLimit)
+
+        } // TODO: Add EVM_CALL type
+
+
+        // Calculate also how much does transaction will cost in abstract gas
+        // NOTE: It's only dependent on tx size and wished gas limit
+
+        let requiredAbstractGas = getCostPerSignatureType(tx) * 2n
+
+        if(tx.type === 'WVM_CONTRACT_DEPLOY'){
+    
+            requiredAbstractGas += BigInt(tx.payload.bytecode.length/2)
+
+        } else if(tx.type === 'WVM_CALL'){
+
+            let totalSize = JSON.stringify(tx.payload)
+
+            requiredAbstractGas += BigInt(totalSize)
+
+            requiredAbstractGas += BigInt(tx.payload.gasLimit)
+
+        } // TODO: Add EVM_CALL type
+    
+        return {requiredFee, requiredAbstractGas}
+
+    }
 
 }
