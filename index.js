@@ -182,9 +182,9 @@ export default class {
 
     getBlockByBlockID=blockID=>this.getRequestToNode('/block/'+blockID)
 
-    getBlockBySID=(shard,blockHeight)=>this.getRequestToNode(`/block_by_sid/${shard}/${blockHeight}`)
+    getBlockBySID=(blockHeight)=>this.getRequestToNode(`/block_by_sid/${blockHeight}`)
 
-    getLatestNBlocksOnShard=(shard,startIndex,limit)=>this.getRequestToNode(`/latest_n_blocks/${shard}/${startIndex}/${limit}`)
+    getLatestNBlocks=(startIndex,limit)=>this.getRequestToNode(`/latest_n_blocks/${startIndex}/${limit}`)
     
     getVerificationThreadStats=()=>this.getRequestToNode(`/verification_thread_stats`)
 
@@ -194,7 +194,7 @@ export default class {
 
     getCurrentEpochOnThread=threadID=>this.getRequestToNode('/current_epoch/'+threadID)
 
-    getCurrentLeadersOnShards=()=>this.getRequestToNode(`/current_shards_leaders`)
+    getCurrentLeader=()=>this.getRequestToNode(`/current_leader`)
 
     getEpochDataByEpochIndex=epochIndex=>this.getRequestToNode(`/epoch_by_index/${epochIndex}`)
 
@@ -203,15 +203,15 @@ export default class {
 
     //_______________________State data API____________________
 
-    getFromStateByCellID=(shard,cellID)=>this.getRequestToNode(`/state/${shard}/${cellID}`)
+    getFromStateByCellID=(cellID)=>this.getRequestToNode(`/state/${cellID}`)
 
     getTransactionReceiptById=txID=>this.getRequestToNode('/tx_receipt/'+txID)
 
     getPoolStats=poolID=>this.getRequestToNode('/pool_stats/'+poolID)
 
-    getTransactionsWithAccount=(shardID,accountID)=>this.getRequestToNode(`/txs_list/${shardID}/${accountID}`)
+    getTransactionsWithAccount=(accountID)=>this.getRequestToNode(`/txs_list/${accountID}`)
 
-    getAccount=(shardID,accountID)=>this.getRequestToNode(`/account/${shardID}/${accountID}`)
+    getAccount=(accountID)=>this.getRequestToNode(`/account/${accountID}`)
 
 
 
@@ -232,7 +232,7 @@ export default class {
 
     //___________________Consensus-related API___________________
 
-    getAggregatedEpochFinalizationProof=(epochIndex,shard)=>this.getRequestToNode(`/aggregated_epoch_finalization_proof/${epochIndex}/${shard}`)
+    getAggregatedEpochFinalizationProof = epochIndex => this.getRequestToNode(`/aggregated_epoch_finalization_proof/${epochIndex}`)
 
     getAggregatedFinalizationProofForBlock=blockID=>this.getRequestToNode('/aggregated_finalization_proof/'+blockID)
 
@@ -241,15 +241,15 @@ export default class {
 
     //_____________________________ TXS Creation _____________________________
 
-    createEd25519Transaction=(originShard,txType,yourAddress,yourPrivateKey,nonce,fee,payload)=>{
+    createEd25519Transaction=(txType,yourAddress,yourPrivateKey,nonce,fee,payload)=>{
 
-        return txsCreation.createEd25519Transaction(this,originShard,txType,yourAddress,yourPrivateKey,nonce,fee,payload)
+        return txsCreation.createEd25519Transaction(this,txType,yourAddress,yourPrivateKey,nonce,fee,payload)
 
     }
 
-    signDataForMultisigTransaction=(originShard,txType,blsPrivateKey,nonce,fee,payload)=>{
+    signDataForMultisigTransaction=(txType,blsPrivateKey,nonce,fee,payload)=>{
 
-        return txsCreation.signDataForMultisigTransaction(this,originShard,txType,blsPrivateKey,nonce,fee,payload)
+        return txsCreation.signDataForMultisigTransaction(this,txType,blsPrivateKey,nonce,fee,payload)
 
     }
 
@@ -259,9 +259,9 @@ export default class {
 
     }
 
-    buildPartialSignatureWithTxData=(originShard,txType,hexID,sharedPayload,nonce,fee,payload)=>{
+    buildPartialSignatureWithTxData=(txType,hexID,sharedPayload,nonce,fee,payload)=>{
 
-        return txsCreation.buildPartialSignatureWithTxData(this,originShard,txType,hexID,sharedPayload,nonce,fee,payload)
+        return txsCreation.buildPartialSignatureWithTxData(this,txType,hexID,sharedPayload,nonce,fee,payload)
 
     }
 
@@ -271,9 +271,9 @@ export default class {
 
     }
     
-    createPostQuantumTransaction=(originShard,txType,pqcAlgorithm,yourAddress,yourPrivateKey,nonce,fee,payload)=>{
+    createPostQuantumTransaction=(txType,pqcAlgorithm,yourAddress,yourPrivateKey,nonce,fee,payload)=>{
     
-        return txsCreation.createPostQuantumTransaction(this,originShard,txType,pqcAlgorithm,yourAddress,yourPrivateKey,nonce,fee,payload)
+        return txsCreation.createPostQuantumTransaction(this,txType,pqcAlgorithm,yourAddress,yourPrivateKey,nonce,fee,payload)
     
     }
 
@@ -285,9 +285,9 @@ export default class {
 
     //_________________________ Smart contracts API __________________________
 
-    getContractMetadata=(shardID,contractID)=>smartContractsApi.getContractMetadata(this,shardID,contractID)
+    getContractMetadata=(contractID)=>smartContractsApi.getContractMetadata(this,contractID)
 
-    getContractStorage=(shardID,contractID,storageName)=>smartContractsApi.getContractStorage(this,shardID,contractID,storageName)
+    getContractStorage=(contractID,storageName)=>smartContractsApi.getContractStorage(this,contractID,storageName)
 
 
     //_________________ To work with other chains _______________
