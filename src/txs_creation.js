@@ -88,7 +88,9 @@ export let signDataForMultisigTransaction=(web1337,txType,blsPrivateKey,nonce,fe
 
     let workflowVersion = web1337.chains.get(web1337.currentChain).workflowVersion
 
-    let dataToSign = web1337.currentChain+workflowVersion+txType+JSON.stringify(payload)+nonce+fee
+    let txTemplate = getTransactionTemplate(workflowVersion,'',txType,SIGNATURES_TYPES.MULTISIG,nonce,fee,payload)
+
+    let dataToSign = web1337.currentChain+workflowVersion+txType+JSON.stringify(txTemplate.payload)+nonce+txTemplate.fee
 
     let singleSigna = bls.singleSig(dataToSign,blsPrivateKey)
 
@@ -123,7 +125,9 @@ export let buildPartialSignatureWithTxData=(web1337,txType,hexID,sharedPayload,n
 
     let workflowVersion = web1337.chains.get(web1337.currentChain).workflowVersion
 
-    let dataToSign = web1337.currentChain+workflowVersion+txType+JSON.stringify(payloadForTblsTransaction)+nonce+fee
+    let txTemplate = getTransactionTemplate(workflowVersion,'',txType,SIGNATURES_TYPES.TBLS,nonce,fee,payloadForTblsTransaction)
+
+    let dataToSign = web1337.currentChain+workflowVersion+txType+JSON.stringify(txTemplate.payload)+nonce+txTemplate.fee
 
     let partialSignature = crypto.tbls.signTBLS(hexID,sharedPayload,dataToSign)
         
@@ -178,7 +182,7 @@ export let createPostQuantumTransaction = (web1337,txType,pqcAlgorithm,yourAddre
     let funcRef = pqcAlgorithm === 'bliss' ? crypto.pqc.bliss : crypto.pqc.dilithium
 
 
-    transaction.sig = funcRef.signData(yourPrivateKey,web1337.currentChain+workflowVersion+txType+JSON.stringify(payload)+nonce+fee)
+    transaction.sig = funcRef.signData(yourPrivateKey,web1337.currentChain+workflowVersion+txType+JSON.stringify(transaction.payload)+nonce+transaction.fee)
 
     // Return signed transaction
 
