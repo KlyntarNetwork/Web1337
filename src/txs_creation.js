@@ -70,7 +70,7 @@ export let createEd25519Transaction=(web1337,txType,yourAddress,yourPrivateKey,n
 
     let transaction = getTransactionTemplate(workflowVersion,yourAddress,txType,SIGNATURES_TYPES.DEFAULT,nonce,fee,payload)
 
-    transaction.sig = crypto.ed25519.signEd25519(web1337.currentChain+workflowVersion+txType+JSON.stringify(payload)+nonce+fee,yourPrivateKey)
+    transaction.sig = crypto.ed25519.signEd25519(web1337.currentChain+workflowVersion+txType+JSON.stringify(transaction.payload)+nonce+transaction.fee,yourPrivateKey)
 
     // Return signed transaction
 
