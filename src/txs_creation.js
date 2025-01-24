@@ -34,11 +34,13 @@ let toBigIntString = value => BigInt(Math.round(value * 1e18)).toString();
 
 export let getTransactionTemplate=(workflowVersion,creator,txType,sigType,nonce,fee,payload)=>{
 
-    fee = toBigIntString(fee);
+    fee = toBigIntString(fee)
 
-    if(payload.amount) payload.amount = toBigIntString(payload.amount);
+    let payloadCopy = JSON.parse(JSON.stringify(payload))
 
-    if(payload?.params?.amount) payload.params.amount = toBigIntString(payload.params.amount);
+    if(payloadCopy.amount) payloadCopy.amount = toBigIntString(payloadCopy.amount)
+
+    if(payloadCopy?.params?.amount) payloadCopy.params.amount = toBigIntString(payloadCopy.params.amount)
 
 
     return {
@@ -48,7 +50,7 @@ export let getTransactionTemplate=(workflowVersion,creator,txType,sigType,nonce,
         type:txType,
         nonce,
         fee,
-        payload,
+        payload: payloadCopy,
         sigType,
         sig:''
 
