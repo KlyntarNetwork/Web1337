@@ -2,7 +2,7 @@
 
 # **Wellcome to Web1337**
 
-![cover](./cover.png)
+![cover](./cover.svg)
 
 </div>
 
